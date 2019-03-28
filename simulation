@@ -1,0 +1,55 @@
+"""
+Name: Matt Farmer
+Date: 3/27/2019
+Section: CS 230, 006
+File: finalProj.py
+Description: Simulation to show that Exp profit = 1/(n*(n+1)) for both Vikrey and FPSB
+"""
+import random
+def simPlayerVal(trials, n):
+    vMaxList = []
+    q = (n-1)/n
+    for i in range(trials):
+        gameList = []
+        for i in range(n-1):
+            gameList.append(q*random.random())
+            maxBid = max(gameList)
+        vMaxList.append(maxBid)
+    return vMaxList
+def main():
+    n = int(input("How many players?: "))
+    q = (n-1)/n
+    trials = int(input("How many trials?: "))
+    vMax = []
+    vMax = simPlayerVal(trials, n)
+    UList = [random.random() for i in range(trials)]
+    winInd = []
+    prof = []
+    # FPSB
+    for i in range(trials):
+        if UList[i]*q > vMax[i]:
+            prof.append(UList[i]*(1-q))
+            winInd.append(1)
+        else:
+            prof.append(0)
+            winInd.append(0)
+    fExpProfit = sum(prof)/trials
+    fExpWin = sum(winInd)/trials
+    # Vikrey
+    winInd = []
+    prof = []
+    VMaxList = [vMax[i]/q for i in range(trials)]
+    for i in range(trials):
+        if UList[i] > VMaxList[i]:
+            prof.append(UList[i] - VMaxList[i])
+            winInd.append(1)
+        else:
+            prof.append(0)
+            winInd.append(0)
+    vExpProf = sum(prof)/trials
+    vExpWin = sum(winInd)/trials
+    print("The expected profit for the Vikrey Auction is " + str(vExpProf) + "\n" + \
+          "The expected profit for the First Price Sealed Bid is " + str(fExpProfit) + "\n" + \
+          "1/(n*(n+1)) = " + str(1/(n*(n+1))))
+if __name__ == '__main__':
+    main()
